@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#15110d">
+  <meta name="description" content="Painel simples de vendas e produtos para a padaria Gustmann.">
+  <title>Gustmann | Painel da padaria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body class="theme-night">
+  <section id="login-screen" class="login-screen" aria-labelledby="login-title">
+    <div class="login-card">
+      <a class="brand login-brand" href="#login-title" aria-label="Gustmann, painel">
+        <span class="brand-mark" aria-hidden="true">G</span>
+        <span class="brand-name">GUSTMANN<span>PADARIA &amp; CAFÉ</span></span>
+      </a>
+      <p class="eyebrow login-eyebrow">PAINEL DE VENDAS</p>
+      <h1 id="login-title">Acesse sua padaria.</h1>
+      <p class="login-description">Entre para acompanhar os produtos e o movimento da Gustmann.</p>
+      <form id="login-form" class="login-form">
+        <div class="login-field"><label for="login-email">E-mail</label><input id="login-email" type="email" autocomplete="username" placeholder="voce@padaria.com" required></div>
+        <div class="login-field"><label for="login-password">Senha</label><input id="login-password" type="password" autocomplete="current-password" placeholder="Digite a senha" required></div>
+        <p id="login-message" class="login-message" role="alert" aria-live="polite" hidden></p>
+        <button class="button button-dark login-submit" type="submit">Entrar no painel <span aria-hidden="true">→</span></button>
+      </form>
+      <div class="demo-login"><strong>Acesso de demonstração</strong><span>E-mail: gustmann@padaria.com</span><span>Senha: fornada2026</span></div>
+      <p class="login-limitation">Login demonstrativo local. Ele não protege dados reais; este projeto não tem servidor de autenticação.</p>
+    </div>
+  </section>
+
+  <div id="app-shell" hidden>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Gustmann, início">
+      <span class="brand-mark" aria-hidden="true">G</span>
+      <span class="brand-name">GUSTMANN<span>PADARIA &amp; CAFÉ</span></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="topbar-note"><span class="status-dot" aria-hidden="true"></span> PADARIA · PAINEL DE VENDAS</span>
+      <button id="logout-button" class="button button-quiet logout-button" type="button">Sair</button>
+      <button id="theme-toggle" class="button theme-toggle" type="button" aria-pressed="true" aria-label="Ativar modo claro">
+        <span id="theme-icon" aria-hidden="true">☀</span><span id="theme-label">Modo claro</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="conteudo" class="page-shell">
+    <section class="intro" id="inicio" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">VISÃO GERAL <span id="period-label">· DADOS DE DEMONSTRAÇÃO</span></p>
+        <h1 id="page-title">Seu balcão,<br><span>em números claros.</span></h1>
+        <p class="intro-copy">Acompanhe faturamento, produtos e movimento diário em um painel simples. Carregue o CSV da padaria e explore as vendas.</p>
+        <div class="hero-actions">
+          <a class="button button-dark hero-primary" href="#painel-vendas">Explorar as vendas <span aria-hidden="true">↘</span></a>
+          <button id="quick-tour" class="button hero-tour" type="button"><span aria-hidden="true">▶</span> Tour de 15 segundos</button>
+        </div>
+        <p class="hero-points"><span>Faturamento</span><i></i><span>Produtos</span><i></i><span>Movimento diário</span></p>
+      </div>
+      <div class="import-card">
+        <div class="import-icon" aria-hidden="true">↥</div>
+        <div class="import-copy">
+          <strong>Teste com seus dados</strong>
+          <span>Selecione o relatório CSV da padaria.</span>
+        </div>
+        <label class="button button-dark file-button" for="csv-file">Escolher CSV</label>
+        <input id="csv-file" class="visually-hidden" type="file" accept=".csv,text/csv" aria-label="Selecionar arquivo CSV">
+      </div>
+    </section>
+
+    <section class="bakery-gallery" aria-label="Vitrine Gustmann, imagens ilustrativas">
+      <div class="gallery-heading">
+        <div><p class="eyebrow">VITRINE DA GUSTMANN</p><h2>As fotos da sua padaria dão vida ao painel.</h2></div>
+        <div class="gallery-tools"><span id="gallery-message" role="status" aria-live="polite">Fotos ilustrativas — personalize com as suas.</span><button id="restore-gallery" class="gallery-reset" type="button">Restaurar fotos</button></div>
+      </div>
+      <div class="gallery-grid">
+        <figure class="gallery-card gallery-feature">
+          <img id="gallery-image-1" data-default-src="https://images.unsplash.com/photo-1604908552986-eb22824b2150?auto=format&amp;fit=crop&amp;w=800&amp;q=78" data-default-alt="Vitrine de padaria com pães e produtos assados" src="https://images.unsplash.com/photo-1604908552986-eb22824b2150?auto=format&amp;fit=crop&amp;w=800&amp;q=78" alt="Vitrine de padaria com pães e produtos assados" fetchpriority="high" decoding="async">
+          <label class="photo-change">Trocar foto<input id="gallery-upload-1" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/avif" aria-label="Escolher foto dos pães"></label>
+          <figcaption><span>PADARIA</span><strong>Uma vitrine cheia de possibilidades</strong><a class="photo-credit" href="https://unsplash.com/photos/brown-bread-on-clear-glass-display-counter-I0Vb0DejVZ0" target="_blank" rel="noopener noreferrer">Foto: Farhad Ibrahimzade / Unsplash</a><button class="gallery-action" type="button" data-search-terms="pães|pão|baguete|brioche">Ver vendas de pães <span aria-hidden="true">↗</span></button></figcaption>
+        </figure>
+        <figure class="gallery-card">
+          <img id="gallery-image-2" data-default-src="https://images.unsplash.com/photo-1677740929724-1aa2dc110721?auto=format&amp;fit=crop&amp;w=700&amp;q=78" data-default-alt="Croissant dourado com camadas folhadas" src="https://images.unsplash.com/photo-1677740929724-1aa2dc110721?auto=format&amp;fit=crop&amp;w=700&amp;q=78" alt="Croissant dourado com camadas folhadas" loading="lazy" decoding="async">
+          <label class="photo-change">Trocar foto<input id="gallery-upload-2" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/avif" aria-label="Escolher foto dos croissants"></label>
+          <figcaption><span>FOLHADOS</span><strong>Croissants</strong><a class="photo-credit" href="https://unsplash.com/photos/a-close-up-of-a-croissant-on-a-table-njBYgZhR65o" target="_blank" rel="noopener noreferrer">Foto: David Thielen / Unsplash</a><button class="gallery-action" type="button" data-search-terms="croissant|folhado">Ver folhados <span aria-hidden="true">↗</span></button></figcaption>
+        </figure>
+        <figure class="gallery-card">
+          <img id="gallery-image-3" data-default-src="https://images.unsplash.com/photo-1651604017121-9afaa05dfd8e?auto=format&amp;fit=crop&amp;w=700&amp;q=78" data-default-alt="Pãezinhos doces com canela" src="https://images.unsplash.com/photo-1651604017121-9afaa05dfd8e?auto=format&amp;fit=crop&amp;w=700&amp;q=78" alt="Pãezinhos doces com canela" loading="lazy" decoding="async">
+          <label class="photo-change">Trocar foto<input id="gallery-upload-3" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/avif" aria-label="Escolher foto dos doces"></label>
+          <figcaption><span>CONFEITARIA</span><strong>Doces de vitrine</strong><a class="photo-credit" href="https://unsplash.com/photos/a-pile-of-cinnamon-rolls-WqFUzmRr25A" target="_blank" rel="noopener noreferrer">Foto: Aurela Redenica / Unsplash</a><button class="gallery-action" type="button" data-search-terms="doce|confeitaria|bolo|sonho|canela">Ver doces <span aria-hidden="true">↗</span></button></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <div id="data-notice" class="notice notice-demo" role="status" aria-live="polite">
+      <span class="notice-icon" aria-hidden="true">i</span>
+      <span><strong>Base de demonstração fictícia.</strong> Os clientes e valores são exemplos; importe seu CSV para analisar dados reais.</span>
+      <button id="dismiss-notice" class="icon-button" type="button" aria-label="Fechar aviso">×</button>
+    </div>
+    <div id="import-message" class="notice notice-error" role="alert" hidden></div>
+
+    <section class="filters-panel" aria-labelledby="filters-heading">
+      <div class="section-heading filter-heading">
+        <div><p class="eyebrow">EXPLORE</p><h2 id="filters-heading">Refine sua análise</h2></div>
+        <button id="clear-filters" class="button button-quiet" type="button">Limpar filtros <span aria-hidden="true">↺</span></button>
+      </div>
+      <div class="filter-grid">
+        <div class="field"><label for="date-from">De</label><input id="date-from" type="date"></div>
+        <div class="field"><label for="date-to">Até</label><input id="date-to" type="date"></div>
+        <div class="field"><label for="customer-filter">Cliente recorrente</label><select id="customer-filter"><option value="">Todos os clientes</option></select></div>
+        <div class="field"><label for="period-filter">Período do dia</label><select id="period-filter"><option value="">Todos os períodos</option></select></div>
+        <div class="field"><label for="category-filter">Categoria</label><select id="category-filter"><option value="">Todas as categorias</option></select></div>
+        <div class="field"><label for="payment-filter">Forma de pagamento</label><select id="payment-filter"><option value="">Todas as formas</option></select></div>
+        <div class="field search-field"><label for="table-search">Buscar nos registros</label><div class="search-wrap"><span aria-hidden="true">⌕</span><input id="table-search" type="search" placeholder="Produto, categoria..."></div></div>
+      </div>
+    </section>
+
+    <section class="metrics-section" id="painel-vendas" tabindex="-1" aria-label="Indicadores de vendas">
+      <div class="section-heading metrics-heading"><div><p class="eyebrow">RESUMO</p><h2>O pulso da operação</h2></div><span class="record-count" id="record-count" aria-live="polite">0 registros</span></div>
+      <div class="metrics-grid">
+        <article class="metric-card metric-primary"><div class="metric-top"><span>Faturamento</span><span class="metric-glyph" aria-hidden="true">R$</span></div><strong id="metric-revenue">—</strong><p>Valor vendido no período</p></article>
+        <article class="metric-card"><div class="metric-top"><span>Registros</span><span class="metric-glyph glyph-warm" aria-hidden="true">▤</span></div><strong id="metric-records">—</strong><p>Linhas válidas na análise</p></article>
+        <article class="metric-card"><div class="metric-top"><span>Unidades vendidas</span><span class="metric-glyph glyph-green" aria-hidden="true">↗</span></div><strong id="metric-units">—</strong><p>Soma das quantidades</p></article>
+        <article class="metric-card"><div class="metric-top"><span>Valor médio por registro</span><span class="metric-glyph glyph-sand" aria-hidden="true">◷</span></div><strong id="metric-average">—</strong><p>Faturamento ÷ registros</p></article>
+        <article class="metric-card metric-morning"><div class="metric-top"><span>Faturamento pela manhã</span><span class="metric-glyph glyph-sand" aria-hidden="true">☀</span></div><strong id="metric-morning">—</strong><p>Subtotal do período Manhã</p></article>
+      </div>
+    </section>
+
+    <section class="assistant-panel" aria-labelledby="assistant-title">
+      <div class="assistant-heading">
+        <div class="assistant-brand" aria-hidden="true">G<span>✦</span></div>
+        <div class="assistant-title-copy"><p class="eyebrow">ATENDENTE DIGITAL · ANÁLISE LOCAL</p><h2 id="assistant-title">Pergunte aos seus dados.</h2><p>Carregue CSV ou Excel aqui e pergunte sobre a planilha sem alterar os filtros e indicadores do painel.</p></div>
+        <div class="assistant-file-actions">
+          <label class="button button-dark assistant-upload" for="assistant-file"><span aria-hidden="true">↥</span> Abrir planilha</label>
+          <input id="assistant-file" class="visually-hidden" type="file" accept=".csv,.xlsx,.xls,.pbix,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" aria-label="Abrir arquivo CSV ou Excel para perguntar sobre os dados">
+          <button id="assistant-demo-button" class="assistant-reset" type="button">Usar demonstração</button>
+        </div>
+      </div>
+      <div class="assistant-source-row">
+        <span id="assistant-dataset-status" class="assistant-dataset-status" role="status" aria-live="polite">Carregando demonstração…</span>
+        <label id="assistant-sheet-wrap" class="assistant-sheet-wrap" for="assistant-sheet" hidden>Aba da planilha
+          <select id="assistant-sheet" aria-label="Escolha a aba da planilha Excel"></select>
+        </label>
+      </div>
+      <div class="assistant-chat-shell">
+        <div id="assistant-messages" class="assistant-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+        <div class="assistant-suggestions" aria-label="Perguntas sugeridas">
+          <button type="button" class="assistant-suggestion" data-question="Qual categoria teve maior faturamento?">Maior faturamento por categoria</button>
+          <button type="button" class="assistant-suggestion" data-question="Quanto vendeu pela manhã?">Vendas pela manhã</button>
+          <button type="button" class="assistant-suggestion" data-question="Quais são as colunas da planilha?">Ver colunas</button>
+        </div>
+        <form id="assistant-form" class="assistant-form">
+          <label class="visually-hidden" for="assistant-question">Escreva uma pergunta sobre a planilha</label>
+          <input id="assistant-question" type="text" placeholder="Ex.: qual produto vendeu mais?" autocomplete="off" required>
+          <button class="button button-dark" type="submit">Perguntar <span aria-hidden="true">↗</span></button>
+        </form>
+      </div>
+      <p class="assistant-powerbi"><strong>Power BI:</strong> exporte os dados do visual como CSV ou Excel e carregue o arquivo aqui. O formato .pbix e relatórios que exigem login não abrem diretamente neste painel. <a href="https://learn.microsoft.com/power-bi/visuals/power-bi-visualization-export-data" target="_blank" rel="noopener noreferrer">Como exportar do Power BI ↗</a></p>
+      <p class="assistant-privacy">Seus arquivos ficam neste navegador e não são enviados. Este assistente local calcula respostas estruturadas; não é uma IA generativa conectada a serviços externos.</p>
+    </section>
+
+    <section class="charts-grid" aria-label="Gráficos de vendas">
+      <article class="chart-card chart-wide">
+        <div class="chart-heading"><div><p class="eyebrow">AO LONGO DO TEMPO</p><h2>Ritmo de vendas</h2></div><span class="chart-unit">Faturamento · R$</span></div>
+        <div class="chart-wrap"><canvas id="timeline-chart" role="img" aria-label="Gráfico de linha do faturamento ao longo do tempo"></canvas></div>
+      </article>
+      <article class="chart-card">
+        <div class="chart-heading"><div><p class="eyebrow">NO CARDÁPIO</p><h2>Vendas por categoria</h2></div><span class="chart-unit">Faturamento · R$</span></div>
+        <div class="chart-wrap chart-category-wrap"><canvas id="category-chart" role="img" aria-label="Gráfico de barras do faturamento por categoria"></canvas></div>
+      </article>
+      <article class="chart-card chart-customer">
+        <div class="chart-heading"><div><p class="eyebrow">CLIENTES RECORRENTES</p><h2>Ganhos por cliente e período</h2></div><span class="chart-unit">Faturamento · R$</span></div>
+        <div class="chart-wrap chart-customer-wrap"><canvas id="customer-chart" role="img" aria-label="Gráfico de barras do faturamento por cliente e período do dia"></canvas></div>
+      </article>
+    </section>
+
+    <section class="table-section" aria-labelledby="table-heading">
+      <div class="section-heading table-heading">
+        <div><p class="eyebrow">DETALHAMENTO</p><h2 id="table-heading">Registros de venda</h2><p id="table-summary" class="table-summary">Carregando registros…</p></div>
+        <div class="table-actions">
+          <label class="table-page-size" for="table-page-size">Mostrar
+            <select id="table-page-size" aria-label="Quantidade de registros exibidos">
+              <option value="all" selected>Todos</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+            registros
+          </label>
+          <button id="export-csv" class="button button-outline" type="button"><span aria-hidden="true">↓</span> Exportar CSV</button>
+        </div>
+      </div>
+      <div id="empty-state" class="empty-state" hidden><span aria-hidden="true">⌕</span><strong>Nenhum registro encontrado</strong><p>Ajuste os filtros ou limpe a busca para ver os dados.</p></div>
+      <div class="table-scroll" id="table-scroll">
+        <table>
+          <caption class="visually-hidden">Registros de vendas filtrados. Selecione o título de uma coluna para ordenar.</caption>
+          <thead><tr>
+            <th scope="col" data-key="data" aria-sort="descending"><button class="sort-button" type="button" data-sort="data">Data <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-key="cliente" aria-sort="none"><button class="sort-button" type="button" data-sort="cliente">Cliente <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-key="periodo" aria-sort="none"><button class="sort-button" type="button" data-sort="periodo">Período <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-key="produto" aria-sort="none"><button class="sort-button" type="button" data-sort="produto">Produto <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-key="categoria" aria-sort="none"><button class="sort-button" type="button" data-sort="categoria">Categoria <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-key="quantidade" aria-sort="none"><button class="sort-button" type="button" data-sort="quantidade">Qtd. <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-key="precoUnitario" aria-sort="none"><button class="sort-button" type="button" data-sort="precoUnitario">Preço unitário <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-key="formaPagamento" aria-sort="none"><button class="sort-button" type="button" data-sort="formaPagamento">Pagamento <span aria-hidden="true">↕</span></button></th>
+            <th scope="col" data-key="faturamento" aria-sort="none"><button class="sort-button" type="button" data-sort="faturamento">Faturamento <span aria-hidden="true">↕</span></button></th>
+          </tr></thead>
+          <tbody id="sales-table-body"></tbody>
+        </table>
+      </div>
+      <div class="table-footer"><span id="page-label" aria-live="polite"></span><div class="pagination"><button id="previous-page" class="page-button" type="button" aria-label="Página anterior">←</button><button id="next-page" class="page-button" type="button" aria-label="Próxima página">→</button></div></div>
+    </section>
+
+    <details class="quality-panel" id="quality-panel">
+      <summary><span>Qualidade dos dados</span><span id="quality-summary">Ver validação do arquivo</span></summary>
+      <div id="quality-content" class="quality-content"><p>Os dados de demonstração são fictícios. Ao importar um arquivo, este painel informa as linhas descartadas e os campos ausentes.</p></div>
+    </details>
+
+    <footer class="page-footer"><span>Feito para entender os dados, uma venda de cada vez.</span><span>Valores em reais · Formato brasileiro</span></footer>
+  </main>
+  <dialog id="quick-tour-dialog" class="quick-tour-dialog" aria-labelledby="tour-title">
+    <div class="tour-topline"><span class="tour-kicker">DEMO RÁPIDA · 15 SEG</span><button id="close-tour" class="icon-button" type="button" aria-label="Fechar tour">×</button></div>
+    <h2 id="tour-title">Do CSV à visão completa.</h2>
+    <p class="tour-intro">Três passos simples para acompanhar as vendas da Gustmann.</p>
+    <ol class="tour-steps">
+      <li><span>01</span><div><strong>Carregue seus dados</strong><p>Escolha um CSV. A leitura acontece no seu navegador.</p></div></li>
+      <li><span>02</span><div><strong>Encontre o que importa</strong><p>Filtre pães, doces, salgados, período ou forma de pagamento.</p></div></li>
+      <li><span>03</span><div><strong>Leve a análise com você</strong><p>Exporte os registros filtrados quando quiser compartilhar.</p></div></li>
+    </ol>
+    <button id="tour-go-dashboard" class="button button-dark tour-cta" type="button">Ver o painel <span aria-hidden="true">↘</span></button>
+  </dialog>
+  </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+Data,Cliente,Periodo,Produto,Categoria,Quantidade,Preco_Unitario,Forma_Pagamento
+2025-04-01,Café Aurora,Manhã,Pão francês,Pães,50,0.90,Pix
+2025-04-01,Escritório Horizonte,Manhã,Café coado,Bebidas,12,6.00,Cartão
+2025-04-01,Escola Girassol,Tarde,Pão de queijo,Salgados,40,3.50,Pix
+2025-04-02,Hotel Alameda,Manhã,Croissant,Confeitaria,18,8.50,Cartão
+2025-04-02,Clínica Ipê,Manhã,Pão de queijo,Salgados,24,3.50,Pix
+2025-04-02,Ateliê Amora,Tarde,Rolo de canela,Confeitaria,8,9.90,Cartão
+2025-04-03,Café Aurora,Manhã,Pão francês,Pães,55,0.90,Pix
+2025-04-03,Hotel Alameda,Manhã,Brioche,Pães,8,11.50,Cartão
+2025-04-03,Escola Girassol,Manhã,Empada de frango,Salgados,15,7.50,Dinheiro
+2025-04-04,Escritório Horizonte,Manhã,Café coado,Bebidas,14,6.00,Cartão
+2025-04-04,Clínica Ipê,Manhã,Baguete,Pães,6,12.50,Pix
+2025-04-04,Ateliê Amora,Tarde,Bolo de cenoura,Bolos,2,34.90,Dinheiro
+2025-04-05,Hotel Alameda,Manhã,Pão francês,Pães,80,0.90,Pix
+2025-04-05,Café Aurora,Manhã,Pão de queijo,Salgados,30,3.50,Pix
+2025-04-05,Escola Girassol,Tarde,Sonho de creme,Confeitaria,20,6.50,Cartão
+2025-04-06,Clínica Ipê,Manhã,Pão francês,Pães,45,0.90,Pix
+2025-04-06,Escritório Horizonte,Manhã,Croissant,Confeitaria,12,8.50,Cartão
+2025-04-06,Ateliê Amora,Manhã,Café coado,Bebidas,10,6.00,Pix
+2025-04-07,Café Aurora,Manhã,Pão francês,Pães,60,0.90,Pix
+2025-04-07,Hotel Alameda,Manhã,Croissant,Confeitaria,20,8.50,Cartão
+2025-04-07,Escola Girassol,Tarde,Empada de frango,Salgados,16,7.50,Dinheiro
+2025-04-08,Escritório Horizonte,Manhã,Broa de milho,Pães,7,12.00,Pix
+2025-04-08,Clínica Ipê,Manhã,Pão de queijo,Salgados,30,3.50,Cartão
+2025-04-08,Ateliê Amora,Tarde,Fatia de torta,Bolos,6,10.90,Cartão
+2025-04-09,Hotel Alameda,Manhã,Baguete,Pães,10,12.50,Cartão
+2025-04-09,Café Aurora,Manhã,Café coado,Bebidas,14,6.00,Pix
+2025-04-09,Escola Girassol,Manhã,Fatia de torta,Bolos,20,10.90,Cartão
+2025-04-10,Clínica Ipê,Manhã,Croissant,Confeitaria,8,8.50,Pix
+2025-04-10,Escritório Horizonte,Manhã,Pão francês,Pães,45,0.90,Dinheiro
+2025-04-10,Ateliê Amora,Manhã,Rolo de canela,Confeitaria,10,9.90,Cartão
